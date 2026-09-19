@@ -17,10 +17,15 @@ import (
 	* user is undefined
 	* start_time > end_time
 	* description: ...long
+
+Solution:
+- Instructor used a LimitReader to limit the data read before continuing (which he mentioned previously, and I like the idea)
+- He also included an empty Description check
+- No enforced max user field size
 */
 
 const maxLenUser = 16
-const maxLenDescription = 1024
+const maxSize = 10 * 1024
 
 type Activity struct {
 	User        string    `json:"user"`
@@ -41,8 +46,8 @@ func (a *Activity) Validate() error {
 		return fmt.Errorf("invalid end_time: end_time must occur after start_time")
 	}
 
-	if l := len(a.Description); l > maxLenDescription {
-		return fmt.Errorf("invalid description: length must not exceed %d characters, got %d", maxLenDescription, l)
+	if l := len(a.Description); l == 0 {
+		return fmt.Errorf("invalid description: field is mandatory")
 	}
 
 	//All checks passed
@@ -52,6 +57,7 @@ func (a *Activity) Validate() error {
 func processActivity(r io.Reader) error {
 	var act Activity
 
+	r = io.LimitReader(r, maxSize)
 	dec := json.NewDecoder(r)
 	if err := dec.Decode(&act); err != nil {
 		return err
