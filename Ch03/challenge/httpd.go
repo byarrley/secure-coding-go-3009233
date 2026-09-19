@@ -6,6 +6,16 @@ import (
 	"net/http"
 )
 
+/*
+	Task: fix security issues in the code
+
+Issues found
+  - Successful login: JavaScript injection
+  - Unsuccessful: status html is returned, instead of exiting the program
+  - Check for other improperly handled errors
+*/
+
+// use http.template package
 var (
 	loginHTML = `<!DOCTYPE html>
 <html>
@@ -40,6 +50,7 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 	user, passwd := r.FormValue("user"), r.FormValue("passwd")
 	if !authUser(user, passwd) {
 		http.Error(w, fmt.Sprintf("%s:%s - bad login", user, passwd), http.StatusUnauthorized)
+		//need a return here
 	}
 
 	fmt.Fprintf(w, statusHTML, getStatus())
