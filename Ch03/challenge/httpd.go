@@ -8,12 +8,15 @@ import (
 )
 
 /*
-	Task: fix security issues in the code
+Task: fix security issues in the code
 
 Issues found
   - Successful login: JavaScript injection
   - Unsuccessful: status html is returned, instead of exiting the program
   - Check for other improperly handled errors
+
+Solution:
+- Instructor included a template for the loginHTML (which I've added here)
 */
 
 // use http.template package
@@ -43,10 +46,11 @@ var (
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
+	loginTemplate := template.Must(template.New("login").Parse(loginHTML))    //Create an HTML template for the login screen
 	statusTemplate := template.Must(template.New("status").Parse(statusHTML)) //Create an HTML template for the status output
 
 	if r.Method != http.MethodPost {
-		fmt.Fprint(w, loginHTML)
+		loginTemplate.Execute(w, nil)
 		return
 	}
 
