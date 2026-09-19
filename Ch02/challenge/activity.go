@@ -22,6 +22,7 @@ Solution:
 - Instructor used a LimitReader to limit the data read before continuing (which he mentioned previously, and I like the idea)
 - He also included an empty Description check
 - No enforced max user field size
+- Print entire object in error messages
 */
 
 const maxLenUser = 16
@@ -64,10 +65,10 @@ func processActivity(r io.Reader) error {
 	}
 
 	err := act.Validate()
-
 	if err != nil {
 		return err
 	}
+
 	log.Printf("activity: %#v", act)
 	// TODO: Store in database
 
