@@ -8,6 +8,16 @@ import (
 	"time"
 )
 
+/*Challenge:
+- Limit size of incoming data (User, String?)
+- Validate the incoming data (e.g. StartTime > EndTime)
+- activity-1.json: valid data
+- activity-2.json: invalid data
+	* user is undefined
+	* start_time > end_time
+	* description: ...long
+*/
+
 type Activity struct {
 	User        string    `json:"user"`
 	StartTime   time.Time `json:"start_time"`
