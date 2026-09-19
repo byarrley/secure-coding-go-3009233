@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template" //Ensure that html/template is imported, *not* "text/template"
 	"log"
 	"net/http"
 )
@@ -34,7 +35,7 @@ var (
 <html>
 	<body>
 		<h2>Status</h2>
-		%s
+		{{.}}
 	</body>
 </html>
 `
@@ -42,6 +43,8 @@ var (
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
+	statusTemplate := template.Must(template.New("status").Parse(statusHTML)) //Create an HTML template for the status output
+
 	if r.Method != http.MethodPost {
 		fmt.Fprint(w, loginHTML)
 		return
@@ -49,16 +52,18 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 
 	user, passwd := r.FormValue("user"), r.FormValue("passwd")
 	if !authUser(user, passwd) {
-		http.Error(w, fmt.Sprintf("%s:%s - bad login", user, passwd), http.StatusUnauthorized)
-		//need a return here
+		//Remove the pw from the error
+		http.Error(w, fmt.Sprintf("%s - bad login", user), http.StatusUnauthorized)
+		return //return instead of continuing on failed login
 	}
 
-	fmt.Fprintf(w, statusHTML, getStatus())
+	statusTemplate.Execute(w, getStatus())
 }
 
 func main() {
 	http.HandleFunc("/status", statusHandler)
 
+	log.Println("Server is running on :8080") //Add log message indicating server is running
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
