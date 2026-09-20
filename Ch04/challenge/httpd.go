@@ -16,7 +16,12 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 
 // requireAdmin is a middleware allowing only users with Admin role to access the handler
 func requireAdmin(h http.Handler) http.Handler {
-	// FIXME: Your code goes here
+	/*
+		1. Request the user
+		2. If the user is invalid, return status 'unauthenticated' (http403?)
+		3. if user does not have the admin role, return status 'unauthorized'
+		4. Otherwise, return the handler
+	*/
 	return h
 }
 
