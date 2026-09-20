@@ -6,6 +6,10 @@ import (
 	"net/http"
 )
 
+/* Task
+- Write the middleware required to generate a Bearer token and restrict access to the admin endpoint
+*/
+
 func adminHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "You're in!")
 }
