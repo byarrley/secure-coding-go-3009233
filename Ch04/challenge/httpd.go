@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,6 +8,11 @@ import (
 
 /* Task
 - Write the middleware required to generate a Bearer token and restrict access to the admin endpoint
+
+Solution:
+- Returns "Unauthorized" for invalid users (I think this is a bug)
+- Can check 'u.HasRole' directly in conditional
+- Context not required
 */
 
 func adminHandler(w http.ResponseWriter, r *http.Request) {
@@ -33,15 +37,11 @@ func requireAdmin(h http.Handler) http.Handler {
 			return
 		}
 
-		ok = u.HasRole(Admin)
-
-		if !ok {
+		if !u.HasRole(Admin) {
 			http.Error(w, "unauthorized", http.StatusUnauthorized)
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "user", u)
-		r = r.WithContext(ctx)
 		h.ServeHTTP(w, r)
 	}
 
