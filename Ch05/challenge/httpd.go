@@ -7,6 +7,12 @@ import (
 	"net/http"
 )
 
+/* Task: protect everything under "/debug" with basic auth
+- can use 'isValidAuth'
+- '/debug/vars' will be available
+- Hint: look at the second parameter of pkg.go.dev/net/http#ListenAndServe
+*/
+
 var (
 	numCalls = expvar.NewInt("messages.calls")
 )
