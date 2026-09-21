@@ -19,6 +19,10 @@ Working notes:
 - Had to do a fair bit of research on middleware and handlers; https://drstearns.github.io/tutorials/gomiddleware/ made what I had to do more clear
 - Still not sure that this is the best way, but it seems like expvar's handler is automagically registered with the defaultServeMux
 	(there's probably a way to change it but I didn't find it before coming up with this)
+
+Solution notes:
+- The instructor's solution in effect was similar to the one here, but I think he was assuming greater familiarity with webservers than I had when I started this exercise.
+- I think I prefer this solution for its readability.  However, it was a good learning experience overall
 */
 
 var (
